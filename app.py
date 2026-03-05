@@ -3,9 +3,9 @@ import pandas as pd
 import time
 
 # Configuración visual
-st.set_page_config(page_title="Búnker RADnet", page_icon="☢️", layout="wide")
+st.set_page_config(page_title="Laboratorio", page_icon="☢️", layout="wide")
 
-st.title("☢️ Panel de Monitoreo - Búnker RADnet")
+st.title("☢️ Panel de Monitoreo - Manu Laboratorio")
 st.write("Datos recibidos en tiempo real desde el ESP32")
 
 # --- CONEXIÓN CON LA BASE DE DATOS (Google Sheets) ---
@@ -18,7 +18,7 @@ def cargar_datos():
     return pd.read_csv(CSV_URL)
 
 # Botón de actualización manual
-if st.button('🔄 Sincronizar con el Búnker'):
+if st.button('🔄 Sincronizar con el Laboratorio'):
     try:
         df = cargar_datos()
         
