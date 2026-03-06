@@ -1,47 +1,44 @@
 import streamlit as st
-import pandas as pd
-import time
+import requests
 
-# Configuración visual
-st.set_page_config(page_title="Laboratorio", page_icon="☢️", layout="wide")
+# Configuración de la página
+st.set_page_config(page_title="Panel de Monitoreo - Manu", page_icon="☢️")
 
 st.title("☢️ Panel de Monitoreo - Manu Laboratorio")
-st.write("Datos recibidos en tiempo real desde el ESP32")
+st.markdown("Datos recibidos en tiempo real desde el ESP32 a través de Google Apps Script.")
 
-# --- CONEXIÓN CON LA BASE DE DATOS (Google Sheets) ---
-# 1. Ve a tu hoja de cálculo, haz clic en 'Archivo' > 'Compartir' > 'Publicar en la web'
-# 2. Selecciona 'Valores separados por comas (.csv)' y copia ese link aquí:
-CSV_URL = "https://docs.google.com/spreadsheets/d/TU_ID_AQUI/export?format=csv"
+# --- CAMBIA ESTA URL POR LA QUE COPIASTE DE GOOGLE ---
+URL_API = "https://script.google.com/macros/s/AKfycbwJpT5-Sw2w65G1zcyUIrRhmZVdZwLWk5x5CrzQ2gYyTmsR0raouhpYqKS1zHwWFM7lYg/exec"
 
-def cargar_datos():
-    # El parámetro 'clear_cache' evita que Streamlit guarde datos viejos
-    return pd.read_csv(CSV_URL)
-
-# Botón de actualización manual
-if st.button('🔄 Sincronizar con el Laboratorio'):
+def obtener_datos():
     try:
-        df = cargar_datos()
-        
-        # Último registro enviado por el ESP32
-        ultimo = df.iloc[-1]
-        
-        # Métricas principales
-        col1, col2, col3, col4 = st.columns(4)
-        col1.metric("Último Nodo", ultimo['nodo'])
-        col2.metric("Sensor", ultimo['sensor'])
-        col3.metric("Valor Actual", f"{ultimo['valor']}")
-        col4.metric("Estado", ultimo['estado'])
-
-        # Gráfica de historial
-        st.subheader("📈 Historial de Señales")
-        st.line_chart(df['valor'])
-
-        # Tabla de datos crudos
-        with st.expander("Ver tabla de registros completa"):
-            st.dataframe(df.sort_index(ascending=False))
-            
+        # Añadimos un timeout para evitar que la app se quede colgada
+        response = requests.get(URL_API, timeout=5)
+        if response.status_code == 200:
+            return response.json()
+        else:
+            return None
     except Exception as e:
-        st.error(f"Esperando datos del ESP32... Error: {e}")
+        return {"error": str(e)}
 
-st.sidebar.markdown("### Configuración del Sistema")
+# Interfaz de usuario
+if st.button('🔄 Sincronizar con el Laboratorio'):
+    with st.spinner('Consultando al ESP32...'):
+        datos = obtener_datos()
+        
+    if datos and "error" not in datos:
+        st.success("¡Sincronización exitosa!")
+        col1, col2 = st.columns(2)
+        
+        # Estilo visual para el estado
+        estado = datos['estado']
+        color = "green" if estado == "ENCENDIDO" else "red"
+        
+        col1.markdown(f"### Estado del LED\n# <span style='color:{color}'>{estado}</span>", unsafe_allow_html=True)
+        col2.metric("Última Actualización", datos['fecha'])
+    else:
+        st.error(f"Error de conexión: {datos.get('error', 'No se encontró la API (404)')}")
+
+st.divider()
+st.sidebar.title("Configuración")
 st.sidebar.info("El ESP32 envía datos mediante el código de Arduino IDE a través de Google Apps Script.")
