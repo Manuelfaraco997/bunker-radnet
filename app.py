@@ -8,7 +8,7 @@ st.title("☢️ Panel de Monitoreo - Manu Laboratorio")
 st.markdown("Datos recibidos en tiempo real desde el ESP32 a través de Google Apps Script.")
 
 # --- CAMBIA ESTA URL POR LA QUE COPIASTE DE GOOGLE ---
-URL_API = "https://script.google.com/macros/s/AKfycbwJpT5-Sw2w65G1zcyUIrRhmZVdZwLWk5x5CrzQ2gYyTmsR0raouhpYqKS1zHwWFM7lYg/exec"
+URL_API = "https://script.google.com/macros/s/AKfycbwahQzl73Lcx1ZGtmCdHXgYk1QE1ab0HTl3ZlE1opeiuLnbK-aLnpk77UpvJMdqdoWTdA/exec"
 
 def obtener_datos():
     try:
