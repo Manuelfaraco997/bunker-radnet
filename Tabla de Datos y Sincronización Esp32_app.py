@@ -16,7 +16,7 @@ st.title("☢️ Panel de Monitoreo - Manu Laboratorio")
 st.markdown("---")
 
 # URL de tu implementación de Google Apps Script (Puente)
-URL_API = "https://script.google.com/macros/s/AKfycbwZfsaIFSmssXIo_7u_TKpwjuBl2WcI0VWdQOQRFyTrpxYfaPGTZq3z4B_XMrJ5sEGK/exec"
+URL_API = "https://script.google.com/macros/s/AKfycbwV1G2grNAlpaO2geTnvHFwQ4BQkVzRhBQ9agIgkzYngqVhmfVVVFYlGjjux0XSvrhf/exec"
 
 # ==========================================
 # 2. FUNCIONES DE COMUNICACIÓN
